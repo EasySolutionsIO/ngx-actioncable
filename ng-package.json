@@ -1,0 +1,8 @@
+{
+    "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+    "name": "ngx-actioncable",
+    "whitelistedNonPeerDependencies": ["."],
+    "lib": {
+        "entryFile": "public_api.ts"
+    }
+}
