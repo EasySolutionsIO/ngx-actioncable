@@ -3,6 +3,6 @@
     "name": "ngx-actioncable",
     "whitelistedNonPeerDependencies": ["."],
     "lib": {
-        "entryFile": "public_api.ts"
+        "entryFile": "./src/public_api.ts"
     }
 }
