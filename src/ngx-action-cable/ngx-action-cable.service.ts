@@ -38,7 +38,7 @@ export class NgxActionCableService {
 	}
 
 	unsubscribe(channel: string): void {
-		if (!this.channels[channel].subscription) {
+		if (!this.channels[channel]) {
 			console.info(`No Subscription for Channel ${channel} found!`);
 		} else {
 			let subscription = this.channels[channel].subscription;
