@@ -1,7 +1,9 @@
 {
   "name": "ngx-actioncable",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "license": "MIT",
+  "author": "Robert Wurm",
+  "homepage": "https://github.com/wurmrobert/ngx-actioncable#readme",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
