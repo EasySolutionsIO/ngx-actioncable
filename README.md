@@ -68,5 +68,5 @@ unregister() {
 }
 ```
 
-#License
+# License
 ngx-actioncable is released under the [MIT License](https://opensource.org/licenses/MIT). See the included LICENSE file for details.
