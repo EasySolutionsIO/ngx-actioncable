@@ -1,4 +1,5 @@
 # NgxActioncable
+Library for real-time communication over websockets with Rails ActionCable.
 
 ## Install
 
