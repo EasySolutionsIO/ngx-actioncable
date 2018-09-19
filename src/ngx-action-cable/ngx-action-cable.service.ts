@@ -20,7 +20,8 @@ export class NgxActionCableService {
 	}
 
 	subscribe(channel: any, params = {}): NgxActionCableBroadcaster {
-		let channelName = (typeof (channel) === 'object') ? channel['channel'] : channel;
+		let channelName = this.getChannelName(channel, params);
+
 		let subscriptionParams = Object.assign({ channel: channel }, params);
 		let broadcaster = new NgxActionCableBroadcaster();
 		let subscription = this.cable.subscriptions.create(subscriptionParams, {
@@ -29,7 +30,6 @@ export class NgxActionCableService {
 			}
 		});
 
-
 		this.channels[channelName] = {
 			subscription: subscription,
 			broadcaster: broadcaster
@@ -37,17 +37,20 @@ export class NgxActionCableService {
 		return broadcaster;
 	}
 
-	unsubscribe(channel: string): void {
-		if (!this.channels[channel]) {
-			console.info(`No Subscription for Channel ${channel} found!`);
+	unsubscribe(channel: string, params = {}): void {
+		let channelName = this.getChannelName(channel, params);
+
+		if (!this.channels[channelName]) {
+			console.info(`No Subscription for Channel ${channelName} found!`);
 		} else {
-			let subscription = this.channels[channel].subscription;
+			let subscription = this.channels[channelName].subscription;
 			this.cable.subscriptions.remove(subscription);
 		}
 	}
 
-	perform(channel: string, action: string, data: any): void {
-		this.channels[channel].subscription.perform(action, data);
+	perform(channel: string, params = {}, action: string, data: any): void {
+		let channelName = this.getChannelName(channel, params);
+		this.channels[channelName].subscription.perform(action, data);
 	}
 
 	connect(url: string): any {
@@ -58,6 +61,12 @@ export class NgxActionCableService {
 
 	disconnect(): void {
 		this.cable.disconnect();
+	}
+
+	private getChannelName(channel: string, params = {}): string {
+		let channelName = (typeof (channel) === 'object') ? channel['channel'] : channel;
+		channelName += `_${JSON.stringify(params)}`; // also add params to unique channel name
+		return channelName;
 	}
 
 }
