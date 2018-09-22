@@ -53,7 +53,21 @@ export class AppComponent {
 Subscribe to Channel:
 ```bash
 register() {
-    let broadcaster = this.cable.subscribe('ExampleChannel'
+    let broadcaster = this.cable.subscribe('ExampleChannel');
+    broadcaster.on<any>('CreateExample').subscribe(
+	message => {
+	    ...
+	}
+    );
+}
+```
+
+
+Subscribe to Channel with parameters:
+```bash
+register() {
+    let params = { id: x }; // you can use any parameters you want
+    let broadcaster = this.cable.subscribe('ExampleChannel', params);
     broadcaster.on<any>('CreateExample').subscribe(
 	message => {
 	    ...
@@ -68,6 +82,16 @@ unregister() {
     this.cable.unsubscribe('ExampleChannel');
 }
 ```
+
+
+Unsubscribe from Channel with parameters:
+```bash
+unregister() {
+    let params = { id: x }; // use parameters of subscription
+    this.cable.unsubscribe('ExampleChannel', params);
+}
+```
+
 
 ## License
 ngx-actioncable is released under the [MIT License](https://opensource.org/licenses/MIT). See the included LICENSE file for details.
