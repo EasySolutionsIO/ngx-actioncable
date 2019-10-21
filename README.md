@@ -12,7 +12,8 @@ Import NgxActionCableModule and also create your configuration in your app.modul
 import { NgxActionCableModule, NgxActionCableConfiguration } from 'ngx-actioncable';
 
 export function getNgxActionCableConfig(): NgxActionCableConfiguration {
-  let config = new NgxActionCableConfiguration('wss://.../cable');
+  let config = new NgxActionCableConfiguration('ws-id', 'wss://.../cable');
+  config.addUrl('another-ws-id', 'wss://.../cable'); // optional
   return config;
 }
 
@@ -53,7 +54,7 @@ export class AppComponent {
 Subscribe to Channel:
 ```bash
 register() {
-    let broadcaster = this.cable.subscribe('ExampleChannel');
+    let broadcaster = this.cable.subscribe('ws-id', 'ExampleChannel');
     broadcaster.on<any>('CreateExample').subscribe(
 	message => {
 	    ...
@@ -67,7 +68,7 @@ Subscribe to Channel with parameters:
 ```bash
 register() {
     let params = { id: x }; // you can use any parameters you want
-    let broadcaster = this.cable.subscribe('ExampleChannel', params);
+    let broadcaster = this.cable.subscribe('ws-id', 'ExampleChannel', params);
     broadcaster.on<any>('CreateExample').subscribe(
 	message => {
 	    ...
@@ -79,7 +80,7 @@ register() {
 Unsubscribe from Channel:
 ```bash
 unregister() {
-    this.cable.unsubscribe('ExampleChannel');
+    this.cable.unsubscribe('ws-id', 'ExampleChannel');
 }
 ```
 
@@ -88,7 +89,7 @@ Unsubscribe from Channel with parameters:
 ```bash
 unregister() {
     let params = { id: x }; // use parameters of subscription
-    this.cable.unsubscribe('ExampleChannel', params);
+    this.cable.unsubscribe('ws-id', 'ExampleChannel', params);
 }
 ```
 

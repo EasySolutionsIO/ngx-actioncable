@@ -6,25 +6,32 @@ import * as ActionCable from 'actioncable';
 @Injectable()
 export class NgxActionCableService {
 
-  public cable: any;
-	public channels: any = {};
+	cables = new Map<string, any>();
+	channels = {};
 
-	constructor( @Optional() public readonly configuration: NgxActionCableConfiguration) {
+	constructor(@Optional() public readonly configuration: NgxActionCableConfiguration) {
 
 		// TODO: remove this workaround -> createWebSocketURL is undefined exception 
 		// in action_cable.js
 		let w: any = window;
 		w.createWebSocketURL = ActionCable.createWebSocketURL;
 
-		this.connect(configuration.url);
+		configuration.urls.forEach((url: string, key: string) => {
+			let cable = this.connect(key, url);
+			this.cables.set(key, cable);
+		});
 	}
 
-	subscribe(channel: any, params = {}): NgxActionCableBroadcaster {
+
+
+	subscribe(key: string, channel: any, params = {}): NgxActionCableBroadcaster {
 		let channelName = this.getChannelName(channel, params);
 
 		let subscriptionParams = Object.assign({ channel: channel }, params);
 		let broadcaster = new NgxActionCableBroadcaster();
-		let subscription = this.cable.subscriptions.create(subscriptionParams, {
+
+		let cable = this.getCabel(key);
+		let subscription = cable.subscriptions.create(subscriptionParams, {
 			received: (data) => {
 				broadcaster.broadcast(data.action, data);
 			}
@@ -37,14 +44,15 @@ export class NgxActionCableService {
 		return broadcaster;
 	}
 
-	unsubscribe(channel: string, params = {}): void {
+	unsubscribe(key: string, channel: string, params = {}): void {
 		let channelName = this.getChannelName(channel, params);
 
+		let cable = this.getCabel(key);
 		if (!this.channels[channelName]) {
 			console.info(`No Subscription for Channel ${channelName} found!`);
 		} else {
 			let subscription = this.channels[channelName].subscription;
-			this.cable.subscriptions.remove(subscription);
+			cable.subscriptions.remove(subscription);
 		}
 	}
 
@@ -53,20 +61,29 @@ export class NgxActionCableService {
 		this.channels[channelName].subscription.perform(action, data);
 	}
 
-	connect(url: string): any {
-		this.cable = ActionCable.createConsumer(url);
-		this.cable.connect();
-		return this.cable;
+	connect(key, url: string): any {
+		let cable = ActionCable.createConsumer(url);
+		cable.connect();
+		return cable;
 	}
 
-	disconnect(): void {
-		this.cable.disconnect();
+	disconnect(key: string): void {
+		let cable = this.getCabel(key);
+		cable.disconnect();
 	}
 
 	private getChannelName(channel: string, params = {}): string {
 		let channelName = (typeof (channel) === 'object') ? channel['channel'] : channel;
 		channelName += `_${JSON.stringify(params)}`; // also add params to unique channel name
 		return channelName;
+	}
+
+	private getCabel(key: string): any {
+		let cable = this.cables.get(key);
+		if (!cable) {
+			throw Error(`No cable instance for key ${key} found!`);
+		}
+		return cable;
 	}
 
 }
