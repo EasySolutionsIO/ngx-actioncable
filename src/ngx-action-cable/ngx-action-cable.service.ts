@@ -17,7 +17,8 @@ export class NgxActionCableService {
 		w.createWebSocketURL = ActionCable.createWebSocketURL;
 
 		configuration.urls.forEach((url: string, key: string) => {
-			this.connect(key, url);
+			let cable = this.connect(key, url);
+			this.cables.set(key, cable);
 		});
 	}
 
@@ -61,8 +62,7 @@ export class NgxActionCableService {
 	}
 
 	connect(key, url: string): any {
-		let cable = this.getCabel(key);
-		cable = ActionCable.createConsumer(url);
+		let cable = ActionCable.createConsumer(url);
 		cable.connect();
 		return cable;
 	}
