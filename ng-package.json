@@ -1,7 +1,12 @@
 {
     "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
-    "whitelistedNonPeerDependencies": ["."],
-    "lib": {
-        "entryFile": "./src/public_api.ts"
-    }
-}
+      "lib": {
+        "entryFile": "src/public_api.ts"
+      },
+      "allowedNonPeerDependencies": [
+        "angular",
+        "actioncable",
+        "rxjs",
+        "zone.js"
+      ]
+  }
