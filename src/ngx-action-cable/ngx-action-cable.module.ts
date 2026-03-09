@@ -9,7 +9,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
   ]
 })
 export class NgxActionCableModule {
-	public static forConfig(configurationFactory: () => NgxActionCableConfiguration): ModuleWithProviders {
+	public static forConfig(configurationFactory: () => NgxActionCableConfiguration): ModuleWithProviders<NgxActionCableModule> {
 		return {
 			ngModule: NgxActionCableModule,
 			providers: [{ provide: NgxActionCableConfiguration, useFactory: configurationFactory }]

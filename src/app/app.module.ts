@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 
 export function getNgxActionCableConfig(): NgxActionCableConfiguration {
-  let config = new NgxActionCableConfiguration('wss://.../cable');
+  let config = new NgxActionCableConfiguration('defaultKey', 'wss://.../cable');
   return config;
 }
 

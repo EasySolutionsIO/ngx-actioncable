@@ -7,7 +7,7 @@ export class AppService {
   constructor(private cable: NgxActionCableService) { }
 
   public registerChannel(channel: string, model: string) {
-    let broadcaster = this.cable.subscribe(channel);
+    let broadcaster = this.cable.subscribe('defaultKey', channel);
 
     broadcaster.on<any>(`Create${model}`).subscribe(
 			message => {
@@ -18,7 +18,7 @@ export class AppService {
 
 
   public unregisterChannel(channel: string) {
-    this.cable.unsubscribe('channel');
+    this.cable.unsubscribe('defaultKey', channel);
   }
 
 }
